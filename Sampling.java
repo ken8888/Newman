@@ -4,18 +4,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.*;
 
-import org.apache.commons.math3.*;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.jfree.chart.*;
 
 public class Sampling {
-	int [] countArray;
+	double [] countArray;
 	int size;
 	Random rand;
 	static int numSelected = 0;
 	
 	public Sampling(int fileSize){
 		this.size = fileSize;
-		this.countArray = new int[fileSize];
+		this.countArray = new double[fileSize];
 		for(int i = 0; i < fileSize; i++){
 			this.countArray[i] = 0;
 		}
@@ -73,6 +73,8 @@ public class Sampling {
 		sampling.randomSelect();
 		System.out.println("Total number selected: " + numSelected);
 		reader.close();
+    DescriptiveStatistics stats = new DescriptiveStatistics(sampling.countArray);
+    System.out.println("Mean: " + stats.getGeometricMean());
 	}
 
 

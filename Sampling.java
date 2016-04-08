@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.*;
 
 import org.apache.commons.math3.*;
-import org.jfree.*;
+import org.jfree.chart.*;
 
 public class Sampling {
 	int [] countArray;

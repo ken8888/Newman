@@ -1,4 +1,4 @@
 How to run the program:
 
-1. javac Sampling.java
+1. javac -cp ./*:. Sampling.java
 2. java -cp . Sampling <filename>

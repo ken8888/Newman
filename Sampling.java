@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.*;
 
+import org.apache.commons.math3.*;
+import org.jfree.*;
+
 public class Sampling {
 	int [] countArray;
 	int size;
@@ -20,7 +23,7 @@ public class Sampling {
 	}
 
 	public void randomSelect() {
-		// TODO Auto-generated constructor stub
+		// TODO Auto-generated constructor stub:
 	
 		int Nr = size;
 		int Nn = (int)(0.1 * Nr);

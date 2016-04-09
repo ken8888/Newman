@@ -6,6 +6,7 @@ import java.io.*;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.jfree.chart.*;
+import org.apache.commons.math3.stat.StatUtils;
 
 public class Sampling {
 	double [] countArray;
@@ -26,7 +27,7 @@ public class Sampling {
 		// TODO Auto-generated constructor stub:
 	
 		int Nr = size;
-		int Nn = (int)(0.1 * Nr);
+		int Nn = (int)Math.round(0.1 * Nr);
 		double nextProb = 0.1;
 		double nextPoint;
 
@@ -70,11 +71,15 @@ public class Sampling {
 		}
 
 		Sampling sampling = new Sampling(lineNum);
-		sampling.randomSelect();
+    for(int i =0; i<10; i++)
+		  sampling.randomSelect();
 		System.out.println("Total number selected: " + numSelected);
 		reader.close();
-    DescriptiveStatistics stats = new DescriptiveStatistics(sampling.countArray);
-    System.out.println("Mean: " + stats.getGeometricMean());
+    DescriptiveStatistics stats = new DescriptiveStatistics();
+    for(int i = 0; i< sampling.size; i++){
+      stats.addValue(sampling.countArray[i]);
+    }
+    System.out.println( " Mean: " + stats.getMean());
 	}
 
 

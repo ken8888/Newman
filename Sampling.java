@@ -73,7 +73,7 @@ public class Sampling {
 
     Sampling sampling = new Sampling(lineNum);
     int runTimes[] = {10, 100, 1000, 10000, 100000};
-    int length = runTimes.size();
+    int length = runTimes.length;
     for(int j = 0; j < length; j++){
       for(int i =0; i<runTimes[j]; i++)
         sampling.randomSelect();

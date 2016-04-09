@@ -71,15 +71,12 @@ public class Sampling {
 		}
 
 		Sampling sampling = new Sampling(lineNum);
-    for(int i =0; i<10; i++)
+    for(int i =0; i<100; i++)
 		  sampling.randomSelect();
 		System.out.println("Total number selected: " + numSelected);
 		reader.close();
-    DescriptiveStatistics stats = new DescriptiveStatistics();
-    for(int i = 0; i< sampling.size; i++){
-      stats.addValue(sampling.countArray[i]);
-    }
-    System.out.println( " Mean: " + stats.getMean());
+    DescriptiveStatistics stats = new DescriptiveStatistics(sampling.countArray);
+    System.out.println( " Mean: " + stats.getMean() + ", SD: " + stats.getStandardDeviation());
 	}
 
 

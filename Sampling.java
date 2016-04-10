@@ -66,20 +66,20 @@ public class Sampling {
     //Scanner fileScanner = new Scanner(input);
     int lineNum = 0;
     while(reader.readLine() != null){
-      System.out.println(lineNum);
       lineNum++;
     }
     reader.close();
 
-    Sampling sampling = new Sampling(lineNum);
     int runTimes[] = {10, 100, 1000, 10000, 100000};
     int length = runTimes.length;
     for(int j = 0; j < length; j++){
+    Sampling sampling = new Sampling(lineNum);
       for(int i =0; i<runTimes[j]; i++)
         sampling.randomSelect();
       DescriptiveStatistics stats = new DescriptiveStatistics(sampling.countArray);
       System.out.println( " Mean: " + stats.getMean() + ", SD: " + stats.getStandardDeviation());
       System.out.println( " Normalized Mean: " + stats.getMean()/runTimes[j] + ", Normalized SD: " + stats.getStandardDeviation()/runTimes[j]);
+	System.out.println("");
     }
   }
 

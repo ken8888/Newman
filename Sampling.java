@@ -5,8 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.*;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.jfree.chart.*;
 import org.apache.commons.math3.stat.StatUtils;
+import org.jfree.chart.JFreeChart; 
+import org.jfree.chart.ChartFactory; 
+import org.jfree.chart.ChartUtilities; 
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 public class Sampling {
   double [] countArray;
@@ -72,6 +76,7 @@ public class Sampling {
 
     int runTimes[] = {10, 100, 1000, 10000, 100000};
     int length = runTimes.length;
+	DefaultCategoryDataset chart = new DefaultCategoryDataset();
     for(int j = 0; j < length; j++){
     Sampling sampling = new Sampling(lineNum);
       for(int i =0; i<runTimes[j]; i++)
@@ -80,7 +85,17 @@ public class Sampling {
       System.out.println( " Mean: " + stats.getMean() + ", SD: " + stats.getStandardDeviation());
       System.out.println( " Normalized Mean: " + stats.getMean()/runTimes[j] + ", Normalized SD: " + stats.getStandardDeviation()/runTimes[j]);
 	System.out.println("");
+	double normalizedMean = stats.getMean()/runTimes[j];	
+	chart.addValue((Number)normalizedMean,"Number of Runs", runTimes[j]);
+	
     }
+	JFreeChart LineChart = ChartFactory.createLineChart(
+		"Mean VS Number of Run", "Number of Run", "Mean",
+		chart, PlotOrientation.VERTICAL, true, true, false);
+	int width = 640;
+	int height = 480;
+	File line_chart = new File( "chart.jpeg");
+	ChartUtilities.saveChartAsJPEG(line_chart, LineChart, width, height);
   }
 
 

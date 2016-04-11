@@ -13,90 +13,108 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 public class Sampling {
-  double [] countArray;
-  int size;
-  Random rand;
-  static int numSelected = 0;
 
-  public Sampling(int fileSize){
-    this.size = fileSize;
-    this.countArray = new double[fileSize];
-    for(int i = 0; i < fileSize; i++){
-      this.countArray[i] = 0;
-    }
-    this.rand = new Random(4);
-  }
+	//An array to hold all the counts of selection
+	double [] countArray;
 
-  public void randomSelect() {
-    // TODO Auto-generated constructor stub:
+	//size of array
+	int size;
 
-    int Nr = size;
-    int Nn = (int)Math.round(0.1 * Nr);
-    double nextProb = 0.1;
-    double nextPoint;
+	//random generator
+	Random rand;
 
-    int i = 0;
-    while(i < size){
+	//constructor to initialize the array and random generator.
+	public Sampling(int fileSize){
+		this.size = fileSize;
+		this.countArray = new double[fileSize];
 
-      nextPoint = rand.nextDouble();
-      if(nextPoint < nextProb){
-        countArray[i]++;
-        Nr--;
-        Nn--;
-        nextProb = (double)Nn / Nr;
-        numSelected++;
-      }
-      else{
-        Nr--;
-        nextProb = (double)Nn / Nr;
-      }
+		for(int i = 0; i < fileSize; i++){
+			this.countArray[i] = 0;
+		}
 
-      //System.out.println("Index:" + i + ", Next probability:" + nextProb + ", Count:" + countArray[i]);
-      i++;
+		this.rand = new Random(4);
+	}
 
-    }
-  }
+	//Sampling without replacement algorithm is written here
+	public void randomSelect() {
 
+		int Nr = size;
+		int Nn = (int)Math.round(0.1 * Nr);
+		double nextProb = 0.1;
+		double nextPoint;
 
-  /**
-   * @param args
-   */
-  public static void main(String[] args) throws IOException{
-    // TODO Auto-generated method stub
-    BufferedReader reader = new BufferedReader(new FileReader(args[0]));
+		int i = 0;
+		while(i < size){
 
-    //File input = new File(args[0]);
+			nextPoint = rand.nextDouble();
+			if(nextPoint < nextProb){
+				countArray[i]++;
+				Nr--;
+				Nn--;
+				nextProb = (double)Nn / Nr;
+			}
+			else{
+				Nr--;
+				nextProb = (double)Nn / Nr;
+			}
 
-    //Scanner fileScanner = new Scanner(input);
-    int lineNum = 0;
-    while(reader.readLine() != null){
-      lineNum++;
-    }
-    reader.close();
+			i++;
 
-    int runTimes[] = {10, 100, 1000, 10000, 100000};
-    int length = runTimes.length;
-	DefaultCategoryDataset chart = new DefaultCategoryDataset();
-    for(int j = 0; j < length; j++){
-    Sampling sampling = new Sampling(lineNum);
-      for(int i =0; i<runTimes[j]; i++)
-        sampling.randomSelect();
-      DescriptiveStatistics stats = new DescriptiveStatistics(sampling.countArray);
-      System.out.println( " Mean: " + stats.getMean() + ", SD: " + stats.getStandardDeviation());
-      System.out.println( " Normalized Mean: " + stats.getMean()/runTimes[j] + ", Normalized SD: " + stats.getStandardDeviation()/runTimes[j]);
-	System.out.println("");
-	double normalizedMean = stats.getMean()/runTimes[j];	
-	chart.addValue((Number)normalizedMean,"Number of Runs", runTimes[j]);
-	
-    }
-	JFreeChart LineChart = ChartFactory.createLineChart(
-		"Mean VS Number of Run", "Number of Run", "Mean",
-		chart, PlotOrientation.VERTICAL, true, true, false);
-	int width = 640;
-	int height = 480;
-	File line_chart = new File( "chart.jpeg");
-	ChartUtilities.saveChartAsJPEG(line_chart, LineChart, width, height);
-  }
+		}
+	}
+
+	//Running the 10, 100, 1000 tests in Main
+	public static void main(String[] args) throws IOException{
+
+		//Read the input train data file
+		BufferedReader reader = new BufferedReader(new FileReader(args[0]));
+
+		//gets the total line number of the data file
+		int lineNum = 0;
+		while(reader.readLine() != null){
+			lineNum++;
+		}
+		reader.close();
+
+		//number of runs for tests
+		int runTimes[] = {10, 100, 1000, 10000, 100000};
+		int length = runTimes.length;
+		
+		DefaultCategoryDataset chart = new DefaultCategoryDataset();
+
+		//Run tests in the loop
+		for(int j = 0; j < length; j++){
+			
+			//create new sampling object for each test
+			Sampling sampling = new Sampling(lineNum);
+
+			//run the algorithm 10, 100 times .....100000 times
+			for(int i =0; i<runTimes[j]; i++)
+				sampling.randomSelect();
+			
+			DescriptiveStatistics stats = new DescriptiveStatistics(sampling.countArray);
+			
+			//report of the result
+			System.out.println( "Number of runs: " + runTimes[j] + 
+					", Normalized Mean: " + stats.getMean()/runTimes[j] + 
+					", Normalized SD: " + stats.getStandardDeviation()/runTimes[j]);
+			System.out.println("");
+			
+			//adding the result after each test, later used to create the chart
+			double normalizedMean = stats.getMean()/runTimes[j];	
+			chart.addValue((Number)normalizedMean, "mean", runTimes[j]);
+
+		}
+		
+		//Creating a chart
+		JFreeChart LineChart = ChartFactory.createLineChart(
+				"Mean VS Number of Runs", "Number of Runs", "Mean",
+				chart, PlotOrientation.VERTICAL, true, true, false);
+		int width = 640;
+		int height = 480;
+		File line_chart = new File( "chart.jpeg");
+		ChartUtilities.saveChartAsJPEG(line_chart, LineChart, width, height);
+	}
 
 
 }
